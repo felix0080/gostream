@@ -1,0 +1,1 @@
+module "github.com/felix0080/gostream"
