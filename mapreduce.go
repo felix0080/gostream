@@ -3,6 +3,7 @@ package gostream
 import (
 	"reflect"
 	"sort"
+	"sync"
 )
 
 type Stream struct {
@@ -15,13 +16,44 @@ func BuildStream(array interface{})*Stream{
 //用于映射每个元素到对应的结果
 func (stream *Stream) Map(f func(interface{})interface{})*Stream {
 	v:=reflect.ValueOf(stream.array)
-	for i := 0; i < v.Len() ; i++  {
+	lens:=v.Len()
+	for i := 0; i < lens ; i++  {
 		newItem:=f(v.Index(i).Interface())
 		v.Index(i).Set(reflect.ValueOf(newItem))
 	}
 	return stream
 }
-
+//用于映射每个元素到对应的结果
+func (stream *Stream) MultipartMap(worknum int,f func(interface{})interface{})*Stream {
+	v:=reflect.ValueOf(stream.array)
+	lens:=v.Len()
+	workitemnum:=lens / worknum
+	lastnum:=lens % worknum
+	var wg sync.WaitGroup
+	for i:=0;i<=worknum ;i++  {
+		wg.Add(1)
+		start := i * workitemnum
+		if i != worknum {
+			go func(start,end int) {
+				defer wg.Done()
+				for i := start; i < end; i++  {
+					newItem:=f(v.Index(i).Interface())
+					v.Index(i).Set(reflect.ValueOf(newItem))
+				}
+			}( start , start + workitemnum )
+			continue
+		}
+		go func(start,end int) {
+			defer wg.Done()
+			for i := start; i < end; i++  {
+				newItem:=f(v.Index(i).Interface())
+				v.Index(i).Set(reflect.ValueOf(newItem))
+			}
+		}( start , start + lastnum )
+	}
+	wg.Wait()
+	return stream
+}
 /*
 当数组小于2时，返回Nil
  */
@@ -41,6 +73,7 @@ func (stream *Stream) Reduce(f func(interface{},interface{})interface{}) interfa
 }
 
 //用户对流进行排序
+//需要自行实现sort接口才可使用此方法
 func (stream *Stream) Sorted() *Stream{
 	arr,ok:=stream.array.(sort.Interface)
 	if ok {

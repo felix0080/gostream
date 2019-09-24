@@ -1,1 +1,3 @@
-module "github.com/felix0080/gostream"
+module github.com/felix0080/gostream
+
+go 1.13

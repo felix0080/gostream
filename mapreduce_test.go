@@ -1,7 +1,6 @@
 package gostream
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -14,11 +13,14 @@ func (s IntSlice) Less(i, j int) bool {
 }
 
 func TestName(t *testing.T) {
-	a := []interface{}{1,2,3,4,5}
+	var a  []interface{}
+	for i:=0;i<100000000 ;i++  {
+		a=append(a,i)
+	}
 	s:=BuildStream(a)
-	//s.Map(func(i interface{}) interface{} {
-	//	return i.(int)*2
-	//})
-	s.Limit(10)
-	fmt.Println("After sorted: ", s)
+	s.Map(func(i interface{}) interface{} {
+		return i.(int)*2
+	})
+	//s.Limit(10)
+	//fmt.Println("After sorted: ", s)
 }
