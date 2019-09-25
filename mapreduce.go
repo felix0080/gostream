@@ -43,7 +43,10 @@ func (stream *Stream) Map(f func(interface{})interface{})*Stream {
 	lens:=v.Len()
 	for i := 0; i < lens ; i++  {
 		newItem:=f(v.Index(i).Interface())
-		v.Index(i).Set(reflect.ValueOf(newItem))
+		//newItem can't be nil
+		if newItem !=nil {
+			v.Index(i).Set(reflect.ValueOf(newItem))
+		}
 	}
 	return stream
 }

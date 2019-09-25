@@ -30,17 +30,13 @@ func TestName(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	value:=s.Combine(s1).
+	s.Combine(s1).
 		Sorted().
 		Limit(6).
 		Map(func(i interface{}) interface{} {
-			return i.(int)+1
-		}).Filter(func(i interface{}) bool {
-			return i.(int)==7
-		}).Reduce(func(i interface{}, i2 interface{}) interface{} {
-			return i.(int)+i2.(int)
+			return nil
 		})//==20
 	//s.Limit(10)
 	fmt.Println("after arr: ", s.Collect())
-	fmt.Println("after value: ", value)
+	//fmt.Println("after value: ", value)
 }
