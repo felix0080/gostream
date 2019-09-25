@@ -15,19 +15,18 @@ import (
 type Stream struct {
 	array interface{}
 }
-// Creates a custom Parser with custom options.
+
+// Example:
 //
-//  // Standard parser without descriptors
-//  specParser := NewParser(Minute | Hour | Dom | Month | Dow)
-//  sched, err := specParser.Parse("0 0 15 */3 *")
+//type IntSlice []interface{}
 //
-//  // Same as above, just excludes time fields
-//  subsParser := NewParser(Dom | Month | Dow)
-//  sched, err := specParser.Parse("15 */3 *")
-//
-//  // Same as above, just makes Dow optional
-//  subsParser := NewParser(Dom | Month | DowOptional)
-//  sched, err := specParser.Parse("15 */3")
+//func (s IntSlice) Len() int { return len(s) }
+//func (s IntSlice) Swap(i, j int){ s[i], s[j] = s[j], s[i] }
+//func (s IntSlice) Less(i, j int) bool {
+//	return s[i].(int) < s[j].(int)
+//}
+//a:=[]interface{}{4,3,2,1}
+//s:=BuildStream(IntSlice(a))
 //
 func BuildStream(array interface{})*Stream{
 	return &Stream{array}
