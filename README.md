@@ -1,3 +1,5 @@
+ [![Fork me on Gitee](https://gitee.com/softbar/gostream/widgets/widget_2.svg)](https://gitee.com/softbar/gostream)
+
 # gostream
 go Map Reduce Sorted Filter Limit stream , a simple library
 
@@ -17,6 +19,7 @@ go Map Reduce Sorted Filter Limit stream , a simple library
   
   
  [![GoDoc](https://godoc.org/github.com/felix0080/gostream?status.png)](https://godoc.org/github.com/felix0080/gostream) 
+
 
   Documentation here: https://godoc.org/github.com/felix0080/gostream
 
