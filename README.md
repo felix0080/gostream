@@ -1,10 +1,15 @@
 # gostream
 go Map Reduce Sorted Filter Limit stream , a simple library
 
-# 进度
-  * 支持并发流  已实现
-  * 支持流之间的拼接。 已实现
-  
+# 进度  已实现
+  * Limit 支持流截断             
+  * Combine 支持流之间的拼接     
+  * Filter 支持流过滤
+  * Sorted 支持流排序
+  * Reduce 支持流 Reduce
+  * Map 支持流 Map
+  * MultipartMap 支持并发流  
+ 
  [![GoDoc](https://godoc.org/github.com/felix0080/gostream?status.png)](https://godoc.org/github.com/felix0080/gostream) 
 
   Documentation here: https://godoc.org/github.com/felix0080/gostream
