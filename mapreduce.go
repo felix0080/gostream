@@ -15,7 +15,20 @@ import (
 type Stream struct {
 	array interface{}
 }
-
+// Creates a custom Parser with custom options.
+//
+//  // Standard parser without descriptors
+//  specParser := NewParser(Minute | Hour | Dom | Month | Dow)
+//  sched, err := specParser.Parse("0 0 15 */3 *")
+//
+//  // Same as above, just excludes time fields
+//  subsParser := NewParser(Dom | Month | Dow)
+//  sched, err := specParser.Parse("15 */3 *")
+//
+//  // Same as above, just makes Dow optional
+//  subsParser := NewParser(Dom | Month | DowOptional)
+//  sched, err := specParser.Parse("15 */3")
+//
 func BuildStream(array interface{})*Stream{
 	return &Stream{array}
 }
