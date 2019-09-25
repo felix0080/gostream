@@ -26,7 +26,7 @@ type Stream struct {
 //		return s[i].(int) < s[j].(int)
 //	}
 //	a:=[]interface{}{4,3,2,1}
-//	s:=BuildStream(IntSlice(a))
+//	s,err:=BuildStream(IntSlice(a))
 //
 func BuildStream(array interface{})(*Stream,error){
 	/*
