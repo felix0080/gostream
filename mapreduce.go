@@ -1,11 +1,17 @@
 package gostream
 
 import (
+	"fmt"
 	"reflect"
 	"sort"
 	"sync"
 )
-
+/*
+定义一个流，内部为 实现了Sort 接口的 Slice(interfalce{}).
+若没有实现Sort接口，sort方法将不可使用
+使用方法类似于java8 stream
+欢迎贡献，大家一起完善此库
+ */
 type Stream struct {
 	array interface{}
 }
@@ -78,6 +84,8 @@ func (stream *Stream) Sorted() *Stream{
 	arr,ok:=stream.array.(sort.Interface)
 	if ok {
 		sort.Sort(arr)
+	}else {
+		fmt.Println("没实现该接口")
 	}
 	return stream
 }
@@ -101,7 +109,22 @@ func (stream *Stream) Filter(f func(interface{})bool)  *Stream{
 	stream.array=v.Interface()
 	return stream
 }
-
+/*
+  组合流，将两个stream 简单组合在一起
+ */
+func (stream *Stream) Combine(anotherStream *Stream) *Stream {
+	v:=reflect.ValueOf(stream.array)
+	anov:=reflect.ValueOf(anotherStream.array)
+	value:=reflect.AppendSlice(v.Slice(0,v.Len()),anov.Slice(0,anov.Len()))
+	stream.array=value.Interface()
+	return stream
+}
+/*
+	收集流，将流的内部数组返回。
+ */
+func (stream *Stream) Collect() interface{} {
+	return stream.array
+}
 //用户获取指定数量的流
 func (stream *Stream) Limit(len int) *Stream{
 	v:=reflect.ValueOf(stream.array)
