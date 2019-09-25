@@ -28,11 +28,19 @@ func main() {
     //定义一个slice.填充元素
     a:=[]interface{}{4,3,2,1}
     //使用实现了sort的type 包装，并调用调用BuildStream
-    s:=BuildStream(IntSlice(a))
+    s,err:=BuildStream(IntSlice(a))
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
     //定义一个slice.填充元素
     a1:=[]interface{}{6,5,8,7}
     //使用实现了sort的type 包装,并调用调用BuildStream
-    s1:=BuildStream(IntSlice(a1))
+    s1,err:=BuildStream(IntSlice(a1))
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
     //将两个流合并为1个，并且以s为主流
     value:=s.Combine(s1).
     //排序，对流的排序，若没有实现sort接口，将不会进行排序

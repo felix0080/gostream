@@ -28,8 +28,14 @@ type Stream struct {
 //	a:=[]interface{}{4,3,2,1}
 //	s:=BuildStream(IntSlice(a))
 //
-func BuildStream(array interface{})*Stream{
-	return &Stream{array}
+func BuildStream(array interface{})(*Stream,error){
+	/*
+	需要检查array 是否是slice
+	 */
+	if reflect.ValueOf(array).Kind() != reflect.Slice {
+		return nil,fmt.Errorf("%s","must be a slice")
+	}
+	return &Stream{array},nil
 }
 //用于映射每个元素到对应的结果
 func (stream *Stream) Map(f func(interface{})interface{})*Stream {

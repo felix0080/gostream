@@ -19,10 +19,17 @@ func TestName(t *testing.T) {
 		a=append(a,i)
 	}*/
 	a:=[]interface{}{4,3,2,1}
-	s:=BuildStream(IntSlice(a))
+	s,err:=BuildStream(IntSlice(a))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	a1:=[]interface{}{6,5,8,7}
-	s1:=BuildStream(IntSlice(a1))
-
+	s1,err:=BuildStream(IntSlice(a1))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	value:=s.Combine(s1).
 		Sorted().
 		Limit(6).
