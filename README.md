@@ -30,6 +30,7 @@ go Map Reduce Sorted Filter Limit stream , a simple library
 package main
 import (
 	"fmt"
+	"strconv"
 	. "github.com/felix0080/gostream"
 )
 type IntSlice []interface{}
@@ -39,6 +40,10 @@ func (s IntSlice) Swap(i, j int){ s[i], s[j] = s[j], s[i] }
 func (s IntSlice) Less(i, j int) bool {
 	return s[i].(int) < s[j].(int)
 } 
+type Item int
+func (s Item) HashCode() []byte {
+    return []byte(strconv.Itoa(int(s)))
+}
 func main() {
    //调用BuildStream 方法，传入实现了sort 接口的slice，若不需要排序，则无需实现sort
     //定义一个slice.填充元素
@@ -85,6 +90,14 @@ func main() {
     }).Sorted()
     fmt.Println(s2.Collect())
     fmt.Println(s.Collect())
+    a3 := []interface{}{Item(1), Item(2), Item(4), Item(4)}
+    s3, err := BuildStream(IntSlice(a3))
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    s3.Distinct()
+    fmt.Println(s3.Collect())
  }
    
 ```
