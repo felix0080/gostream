@@ -16,6 +16,7 @@ type Stream struct {
 	array interface{}
 }
 
+
 // Example:
 //
 //	type IntSlice []interface{}
@@ -37,6 +38,17 @@ func BuildStream(array interface{})(*Stream,error){
 	}
 	return &Stream{array},nil
 }
+/*
+	流拷贝，拷贝一个新流，返回与以前的流相同大小，容量的新流，且将内容拷贝进去
+ */
+func (stream *Stream) Copy() *Stream{
+	value:=reflect.ValueOf(stream.array)
+	a2:=reflect.MakeSlice(value.Type(),value.Len(),value.Cap())
+	reflect.Copy(a2,value)
+	return &Stream{
+		array:a2.Interface(),
+	}
+}
 //用于映射每个元素到对应的结果
 func (stream *Stream) Map(f func(interface{})interface{})*Stream {
 	v:=reflect.ValueOf(stream.array)
@@ -50,6 +62,13 @@ func (stream *Stream) Map(f func(interface{})interface{})*Stream {
 	}
 	return stream
 }
+/*func (stream *Stream) Copy()*Stream {
+	a1:=[]interface{}{6,5,"asd",7}
+	a2:=make([]interface{},len(a1))
+	fmt.Println(fmt.Sprintf("%p %p",a1,a2))
+	copy(a2,a1)
+	fmt.Println(a2)
+}*/
 //用于映射每个元素到对应的结果
 func (stream *Stream) MultipartMap(worknum int,f func(interface{})interface{})*Stream {
 	v:=reflect.ValueOf(stream.array)

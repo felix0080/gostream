@@ -42,6 +42,19 @@ Usage
 	fmt.Println("after arr: ", s.Collect())
 	fmt.Println("after value: ", value)
 
+可使用copy,将流深度拷贝成新的Stream
+	a:=[]interface{}{4,3,2,1}
+	s,err:=BuildStream(IntSlice(a))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	s1:=s.Copy()
+	s1.Map(func(i interface{}) interface{} {
+		return i.(int)+1
+	}).Sorted()
+	fmt.Println(s1.Collect())
+	fmt.Println(s.Collect())
 欢迎提Issues
 */
 package gostream
