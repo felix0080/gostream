@@ -15,6 +15,7 @@ go Map Reduce Sorted Filter Limit stream , a simple library
  # 进度  待实现
   * Distinct 排除重复元素  
   * Manager 流的管理器，管理多个流，做到简单，快捷操作多个流
+  * Copy 流拷贝
   
   
   
