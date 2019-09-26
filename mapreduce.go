@@ -38,9 +38,14 @@ func BuildStream(array interface{})(*Stream,error){
 	}
 	return &Stream{array},nil
 }
-/*
-	流拷贝，拷贝一个新流，返回与以前的流相同大小，容量的新流，且将内容拷贝进去
- */
+
+//流拷贝，拷贝一个新流，返回与以前的流相同大小，容量的新流，且将内容拷贝进去
+//	s2:=s.Copy()
+//	s2.Map(func(i interface{}) interface{} {
+//		return i.(int)+1
+//	}).Sorted()
+//	fmt.Println(s2.Collect())
+//	fmt.Println(s.Collect())
 func (stream *Stream) Copy() *Stream{
 	value:=reflect.ValueOf(stream.array)
 	a2:=reflect.MakeSlice(value.Type(),value.Len(),value.Cap())

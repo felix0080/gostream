@@ -77,6 +77,13 @@ func main() {
     //s.Limit(10)
     fmt.Println("after arr: ", s.Collect())
     fmt.Println("after value: ", value)
+   
+    s2:=s.Copy()
+    s2.Map(func(i interface{}) interface{} {
+        return i.(int)+1
+    }).Sorted()
+    fmt.Println(s2.Collect())
+    fmt.Println(s.Collect())
  }
    
 ```
