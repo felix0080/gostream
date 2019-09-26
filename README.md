@@ -14,7 +14,7 @@ go Map Reduce Sorted Filter Limit stream , a simple library
   * Copy 流拷贝
   
  # 进度  待实现
-  * Distinct 排除重复元素  
+  * Distinct 排除重复元素  拟定适用技术 bloom 过滤器 / Cuckoo Filter 过滤器
   * Manager 流的管理器，管理多个流，做到简单，快捷操作多个流
   
   

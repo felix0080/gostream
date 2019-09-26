@@ -55,6 +55,25 @@ Usage
 	}).Sorted()
 	fmt.Println(s1.Collect())
 	fmt.Println(s.Collect())
-欢迎提Issues
+
+去除重复元素样例
+	func (s Item) HashCode() []byte {
+		return []byte(strconv.Itoa(int(s)))
+	}
+	func (s IntSlice) Len() int      { return len(s) }
+	func (s IntSlice) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+	func (s IntSlice) Less(i, j int) bool {
+		return s[i].(int) < s[j].(int)
+	}
+	func TestStream_Distinct(t *testing.T) {
+		a := []interface{}{Item(1), Item(2), Item(4), Item(4)}
+		s, err := BuildStream(IntSlice(a))
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		s.Distinct()
+		fmt.Println(s.Collect())
+	}
 */
 package gostream
