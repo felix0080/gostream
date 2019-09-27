@@ -17,7 +17,7 @@ go Map Reduce Sorted Filter Limit stream , a simple library
  # 进度  待实现
   * Manager 流的管理器，管理多个流，做到简单，快捷操作多个流
   * 流之间拼接允许按照优先级进行排列（和优先级队列相似，用于优先级重要的场景）
-  
+  * 流是否可以用反射形成新流从而替换之前的流，然后使用新流进行下一步的计算
   
   
   
