@@ -1,7 +1,8 @@
  [![Fork me on Gitee](https://gitee.com/softbar/gostream/widgets/widget_2.svg)](https://gitee.com/softbar/gostream)
 
 # gostream
-go Map Reduce Sorted Filter Limit stream , a simple library
+go Map Reduce Sorted Filter Limit stream , a simple library  
+本库可用于科学计算，数据分析等方向，欢迎贡献或提需求
 
 # 进度  已实现
   * Limit 支持流截断             
@@ -15,6 +16,7 @@ go Map Reduce Sorted Filter Limit stream , a simple library
   * Distinct 排除重复元素  拟定适用技术 bloom 过滤器 / Cuckoo Filter 过滤器
  # 进度  待实现
   * Manager 流的管理器，管理多个流，做到简单，快捷操作多个流
+  * 流之间拼接允许按照优先级进行排列（和优先级队列相似，用于优先级重要的场景）
   
   
   
