@@ -64,6 +64,8 @@ func main() {
         fmt.Println(err)
         return
     }
+   //指定流的类型
+    var types []int
     //将两个流合并为1个，并且以s为主流
     value:=s.Combine(s1).
     //排序，对流的排序，若没有实现sort接口，将不会进行排序
@@ -71,7 +73,7 @@ func main() {
     //只保留前6个元素
         Limit(6).
     //map 将函数作用到每一个流元素上
-        Map(func(i interface{}) interface{} {
+        Map(types,func(i interface{}) interface{} {
             return i.(int)+1
         }).
     //Filter 过滤函数返回值为true的元素，形成新流
@@ -79,7 +81,7 @@ func main() {
             return i.(int)==7
         }).
     //Reduce 将前两个元素计算后的结果和第三个元素计算，以此类推
-    Reduce(func(i interface{}, i2 interface{}) interface{} {
+        Reduce(func(i interface{}, i2 interface{}) interface{} {
             return i.(int)+i2.(int)
         })//==20
     //s.Limit(10)
@@ -87,7 +89,7 @@ func main() {
     fmt.Println("after value: ", value)
    
     s2:=s.Copy()
-    s2.Map(func(i interface{}) interface{} {
+    s2.Map(types,func(i interface{}) interface{} {
         return i.(int)+1
     }).Sorted()
     fmt.Println(s2.Collect())

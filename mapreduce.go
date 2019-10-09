@@ -117,11 +117,15 @@ func (stream *Stream) MultipartMap(worknum int,types interface{}, f func(interfa
 }
 
 /*
-当数组小于2时，返回Nil
+	当数组==0时，返回Nil
+	当数组==1时，返回Nil
 */
 func (stream *Stream) Reduce(f func(interface{}, interface{}) interface{}) interface{} {
 	v := reflect.ValueOf(stream.array)
-	if v.Len() == 0 || v.Len() == 1 {
+	if v.Len() == 0 {
+		return nil
+	}
+	if v.Len() == 1 {
 		return nil
 	}
 	if v.Len() == 2 {
