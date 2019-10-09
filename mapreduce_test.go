@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
+	"log"
 	"reflect"
 	"strconv"
 	"testing"
 )
 
 type IntSlice []interface{}
-
+type IntSlice2 []interface{}
 type Item int
 
 func (s Item) HashCode() []byte {
@@ -20,6 +21,11 @@ func (s IntSlice) Len() int      { return len(s) }
 func (s IntSlice) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
 func (s IntSlice) Less(i, j int) bool {
 	return s[i].(int) < s[j].(int)
+}
+func (s IntSlice2) Len() int      { return len(s) }
+func (s IntSlice2) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
+func (s IntSlice2) Less(i, j int) bool {
+	return s[i].(int) > s[j].(int)
 }
 func TestStream_Distinct(t *testing.T) {
 	a := []interface{}{Item(1), Item(2), Item(4), Item(4)}
@@ -48,11 +54,12 @@ func TestName(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
+	var types []int
 	s.Combine(s1).
 		Sorted().
 		Limit(6).
-		Map(func(i interface{}) interface{} {
-			return nil
+		Map(types,func(i interface{}) interface{} {
+			return 1
 		}) //==20
 	//s.Limit(10)
 	fmt.Println("after arr: ", s.Collect())
@@ -66,13 +73,34 @@ func TestCopy(t *testing.T) {
 		return
 	}
 	s1 := s.Copy()
-	s1.Map(func(i interface{}) interface{} {
+	var types []int
+	s1.Map(types,func(i interface{}) interface{} {
 		return i.(int) + 1
 	}).Sorted()
 	fmt.Println(s1.Collect())
 	fmt.Println(s.Collect())
 }
 
+type ForFoo struct {
+	Item int
+}
+func TestStream_Map(t *testing.T) {
+	a := []ForFoo{ForFoo{4}, ForFoo{3}, ForFoo{2}, ForFoo{1}}
+	s, err := BuildStream((a))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	//s1 := s.Copy()
+	var types []int
+	s.Map(types,func(i interface{}) interface{} {
+		return i.(ForFoo).Item + 1
+	}).Sorted()
+	//fmt.Println(s1.Collect())
+	//_,ok:=s.Collect().([]interface{})
+	log.Println(reflect.ValueOf(s.Collect()).Type())
+	fmt.Println(s.Collect())
+}
 func BenchmarkCopyRegule(b *testing.B) {
 	/*
 		goos: windows

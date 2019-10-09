@@ -57,16 +57,20 @@ func (stream *Stream) Copy() *Stream {
 }
 
 //用于映射每个元素到对应的结果
-func (stream *Stream) Map(f func(interface{}) interface{}) *Stream {
+//返回的数组的类型需要指定，传入第一个参数reflect.Type
+func (stream *Stream) Map(types interface{},f func(interface{}) interface{}) *Stream {
 	v := reflect.ValueOf(stream.array)
 	lens := v.Len()
+	nslice := reflect.MakeSlice(reflect.TypeOf(types), lens, lens)
 	for i := 0; i < lens; i++ {
 		newItem := f(v.Index(i).Interface())
 		//newItem can't be nil
 		if newItem != nil {
-			v.Index(i).Set(reflect.ValueOf(newItem))
+			//新建一个新流存储数据，防止类型错误
+			nslice.Index(i).Set(reflect.ValueOf(newItem))
 		}
 	}
+	stream.array = nslice.Interface()
 	return stream
 }
 
@@ -78,9 +82,11 @@ func (stream *Stream) Map(f func(interface{}) interface{}) *Stream {
 	fmt.Println(a2)
 }*/
 //用于映射每个元素到对应的结果
-func (stream *Stream) MultipartMap(worknum int, f func(interface{}) interface{}) *Stream {
+//返回的数组的类型需要指定，传入第一个参数reflect.Type
+func (stream *Stream) MultipartMap(worknum int,types interface{}, f func(interface{}) interface{}) *Stream {
 	v := reflect.ValueOf(stream.array)
 	lens := v.Len()
+	nslice:=reflect.MakeSlice(reflect.TypeOf(types),lens,lens)
 	workitemnum := lens / worknum
 	lastnum := lens % worknum
 	var wg sync.WaitGroup
@@ -92,7 +98,7 @@ func (stream *Stream) MultipartMap(worknum int, f func(interface{}) interface{})
 				defer wg.Done()
 				for i := start; i < end; i++ {
 					newItem := f(v.Index(i).Interface())
-					v.Index(i).Set(reflect.ValueOf(newItem))
+					nslice.Index(i).Set(reflect.ValueOf(newItem))
 				}
 			}(start, start+workitemnum)
 			continue
@@ -101,11 +107,12 @@ func (stream *Stream) MultipartMap(worknum int, f func(interface{}) interface{})
 			defer wg.Done()
 			for i := start; i < end; i++ {
 				newItem := f(v.Index(i).Interface())
-				v.Index(i).Set(reflect.ValueOf(newItem))
+				nslice.Index(i).Set(reflect.ValueOf(newItem))
 			}
 		}(start, start+lastnum)
 	}
 	wg.Wait()
+	stream.array = nslice.Interface()
 	return stream
 }
 
@@ -134,7 +141,7 @@ func (stream *Stream) Sorted() *Stream {
 	if ok {
 		sort.Sort(arr)
 	} else {
-		fmt.Println("没实现该接口")
+		panic("The sort interface is not implemented")
 	}
 	return stream
 }
