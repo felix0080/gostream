@@ -104,7 +104,9 @@ func main() {
 	ss:=BuildStream(stus)
 	sss:=ss.GroupBy("Name")
 	fmt.Println(sss)
-
+	for index,value:=range sss{
+		fmt.Println(index,value.Collect())
+	}
  }
    
 ```
