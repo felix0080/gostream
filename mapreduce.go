@@ -181,10 +181,10 @@ func (stream *Stream) ConvertToMap(f func(interface{}) (string,interface{})) *St
 	stream.array = v.Interface()
 	return stream
 }*/
-//groupby 不同于java stream 只求每种类别的数量，
-// 此groupby 主要是分解出多个流，
+//GroupByToStream 不同于java stream 只求每种类别的数量，
+// GroupByToStream 主要是分解出多个流，
 // 返回一个流map结构 key为FieldName 即结构体内的元素
-func (stream *Stream) GroupBy(FieldName string) map[string]*Stream {
+func (stream *Stream) GroupByToStream(FieldName string) map[string]*Stream {
 	mtype := make(map[string][]interface{})
 	v := reflect.ValueOf(stream.array)
 	lens := v.Len()
@@ -213,6 +213,31 @@ func (stream *Stream) GroupBy(FieldName string) map[string]*Stream {
 		return nmap
 	}
 	return nil
+}
+//GroupByToMap 不同于java stream 只求每种类别的数量，
+// GroupByToMap 主要是分解出多个流，
+// 返回一个流map结构 key为FieldName 即结构体内的元素
+func (stream *Stream) GroupByToMap(FieldName string) map[string][]interface{} {
+	mtype := make(map[string][]interface{})
+	v := reflect.ValueOf(stream.array)
+	lens := v.Len()
+	for i := 0; i < lens; i++ {
+		tmpv:=v.Index(i)
+		fieldv:=tmpv.FieldByName(FieldName)
+		if fieldv.Kind() != reflect.String {
+			panic(fmt.Sprintf("%s is not string",v.Kind()))
+		}
+		st, ok := mtype[fieldv.String()]
+		if !ok {
+			var slice []interface{}
+			slice=append(slice, tmpv.Interface())
+			mtype[fieldv.String()]=slice
+		}else{
+			st=append(st, tmpv.Interface())
+			mtype[fieldv.String()]=st
+		}
+	}
+	return mtype
 }
 
 

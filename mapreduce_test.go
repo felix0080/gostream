@@ -156,7 +156,7 @@ func TestStream_GroupBy(t *testing.T) {
 	}
 	s=append(s, Student{strconv.Itoa(1)})
 	ss:=BuildStream(s)
-	sss:=ss.GroupBy("Name")
+	sss:=ss.GroupByToStream("Name")
 	for index,value:=range sss{
 		fmt.Println(index,value.Collect())
 	}
