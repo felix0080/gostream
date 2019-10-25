@@ -7,19 +7,11 @@ Usage
 	//定义一个slice.填充元素
 	a:=[]interface{}{4,3,2,1}
 	//使用实现了sort的type 包装，并调用调用BuildStream
-	s,err:=BuildStream(IntSlice(a))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	s:=BuildStream(IntSlice(a))
 	//定义一个slice.填充元素
 	a1:=[]interface{}{6,5,8,7}
 	//使用实现了sort的type 包装,并调用调用BuildStream
-	s1,err:=BuildStream(IntSlice(a1))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	s1:=BuildStream(IntSlice(a1))
 	//将两个流合并为1个，并且以s为主流
 	value:=s.Combine(s1).
 	//排序，对流的排序，若没有实现sort接口，将不会进行排序
@@ -44,11 +36,7 @@ Usage
 
 可使用copy,将流深度拷贝成新的Stream
 	a:=[]interface{}{4,3,2,1}
-	s,err:=BuildStream(IntSlice(a))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	s:=BuildStream(IntSlice(a))
 	s1:=s.Copy()
 	s1.Map(func(i interface{}) interface{} {
 		return i.(int)+1
@@ -67,11 +55,7 @@ Usage
 	}
 	func TestStream_Distinct(t *testing.T) {
 		a := []interface{}{Item(1), Item(2), Item(4), Item(4)}
-		s, err := BuildStream(IntSlice(a))
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
+		s := BuildStream(IntSlice(a))
 		s.Distinct()
 		fmt.Println(s.Collect())
 	}

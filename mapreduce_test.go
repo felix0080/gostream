@@ -29,11 +29,7 @@ func (s IntSlice2) Less(i, j int) bool {
 }
 func TestStream_Distinct(t *testing.T) {
 	a := []interface{}{Item(1), Item(2), Item(4), Item(4)}
-	s, err := BuildStream(IntSlice(a))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	s:= BuildStream(IntSlice(a))
 	s.Distinct()
 	fmt.Println(s.Collect())
 }
@@ -43,17 +39,9 @@ func TestName(t *testing.T) {
 		a=append(a,i)
 	}*/
 	a := []interface{}{4, 3, 2, 1}
-	s, err := BuildStream(IntSlice(a))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	s := BuildStream(IntSlice(a))
 	a1 := []interface{}{6, 5, 8, 7}
-	s1, err := BuildStream(IntSlice(a1))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	s1 := BuildStream(IntSlice(a1))
 	var types []int
 	s.Combine(s1).
 		Sorted().
@@ -67,11 +55,7 @@ func TestName(t *testing.T) {
 }
 func TestCopy(t *testing.T) {
 	a := []interface{}{4, 3, 2, 1}
-	s, err := BuildStream(IntSlice(a))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	s := BuildStream(IntSlice(a))
 	s1 := s.Copy()
 	var types []int
 	s1.Map(types,func(i interface{}) interface{} {
@@ -86,11 +70,7 @@ type ForFoo struct {
 }
 func TestStream_Map(t *testing.T) {
 	a := []ForFoo{ForFoo{4}, ForFoo{3}, ForFoo{2}, ForFoo{1}}
-	s, err := BuildStream((a))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	s := BuildStream((a))
 	//s1 := s.Copy()
 	var types []int
 	s.Map(types,func(i interface{}) interface{} {
@@ -156,4 +136,30 @@ func Clone(a, b interface{}) error {
 		return err
 	}
 	return nil
+}
+func TestStream_GroupBy(t *testing.T) {
+/*	var i []int
+	v := reflect.MakeSlice(reflect.TypeOf(i), 5, 5)
+
+	v=reflect.Append(v, reflect.ValueOf(1))
+	fmt.Println(v.Index(1))
+	fmt.Println(v.Len())*/
+	/*s := Student{
+		Name:"fanxing",
+	}
+	v:=reflect.ValueOf(s)
+	v1:=v.FieldByName("Name")
+	fmt.Println(v1.Kind()==reflect.String)*/
+	var s []Student
+	for i := 0; i < 5; i++ {
+		s=append(s,Student{strconv.Itoa(i)})
+	}
+	s=append(s, Student{strconv.Itoa(1)})
+	ss:=BuildStream(s)
+	sss:=ss.GroupBy("Name")
+	fmt.Println(sss)
+}
+
+type Student struct {
+	Name string
 }

@@ -28,16 +28,17 @@ type Stream struct {
 //		return s[i].(int) < s[j].(int)
 //	}
 //	a:=[]interface{}{4,3,2,1}
-//	s,err:=BuildStream(IntSlice(a))
+//	s:=BuildStream(IntSlice(a))
 //
-func BuildStream(array interface{}) (*Stream, error) {
+func BuildStream(array interface{}) (*Stream) {
 	/*
 		需要检查array 是否是slice
 	*/
 	if reflect.ValueOf(array).Kind() != reflect.Slice {
-		return nil, fmt.Errorf("%s", "must be a slice")
+		panic("must be a slice")
+		return nil
 	}
-	return &Stream{array}, nil
+	return &Stream{array}
 }
 
 //流拷贝，拷贝一个新流，返回与以前的流相同大小，容量的新流，且将内容拷贝进去
@@ -169,6 +170,50 @@ func (stream *Stream) Filter(f func(interface{}) bool) *Stream {
 	stream.array = v.Interface()
 	return stream
 }
+/*//设置条件满足的被过滤
+func (stream *Stream) ConvertToMap(f func(interface{}) (string,interface{})) *Stream {
+	v := reflect.ValueOf(stream.array)
+	len := v.Len()
+	for i := 0; i < len; i++ {
+		key,value:=f(v.Index(i).Interface())
+	}
+	v = v.Slice(0, len)
+	stream.array = v.Interface()
+	return stream
+}*/
+//groupby 不同于java stream 只求每种类别的数量，
+// 此groupby 主要是分解出多个流，
+// 返回一个流map结构 key为FieldName 即结构体内的元素
+func (stream *Stream) GroupBy(FieldName string) map[string]*Stream {
+	mtype := make(map[string][]interface{})
+	v := reflect.ValueOf(stream.array)
+	lens := v.Len()
+	for i := 0; i < lens; i++ {
+		tmpv:=v.Index(i)
+		fieldv:=tmpv.FieldByName(FieldName)
+		if fieldv.Kind() != reflect.String {
+			panic(fmt.Sprintf("%s is not string",v.Kind()))
+		}
+		st, ok := mtype[fieldv.String()]
+		if !ok {
+			var slice []interface{}
+			slice=append(slice, tmpv.Interface())
+			mtype[fieldv.String()]=slice
+		}else{
+			st=append(st, tmpv.Interface())
+			mtype[fieldv.String()]=st
+		}
+	}
+	if len(mtype) >0{
+		nmap := make(map[string]*Stream)
+		for index,value:=range mtype{
+			tmpv:=BuildStream(value)
+			nmap[index]=tmpv
+		}
+		return nmap
+	}
+	return nil
+}
 
 /*
   组合流，将两个stream 简单组合在一起
@@ -212,11 +257,7 @@ func (stream *Stream) Limit(len int) *Stream {
 //	}
 //	func TestStream_Distinct(t *testing.T) {
 //		a := []interface{}{Item(1), Item(2), Item(4), Item(4)}
-//		s, err := BuildStream(IntSlice(a))
-//		if err != nil {
-//			fmt.Println(err)
-//			return
-//		}
+//		s := BuildStream(IntSlice(a))
 //		s.Distinct()
 //		fmt.Println(s.Collect())
 //	}
@@ -249,3 +290,4 @@ func (stream *Stream) Distinct() *Stream {
 type Unique interface {
 	HashCode() []byte
 }
+

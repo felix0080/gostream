@@ -17,7 +17,7 @@ go Map Reduce Sorted Filter Limit stream , a simple library
   * 流是否可以用反射形成新流从而替换之前的流，然后使用新流进行下一步的计算(是可以的，不过每个流都需要是[]interface的，如果不是，替换时会发生类型不一致，但为了一般性和适用性，采用将期望转换类型传入的方式，返回转换后的期望类型给用户,已实现，采用传入目标数组的形式来获取期望的数组类型)  
     
  # 进度  待实现
-  * Manager 流管理器 需要构思需求
+  * Manager 流管理器 需要构思需求 暂时只需要存储流即可
   * 流之间拼接允许按照优先级进行排列（和优先级队列相似，用于优先级重要的场景）
   
   
@@ -51,19 +51,11 @@ func main() {
     //定义一个slice.填充元素
     a:=[]interface{}{4,3,2,1}
     //使用实现了sort的type 包装，并调用调用BuildStream
-    s,err:=BuildStream(IntSlice(a))
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
+    s:=BuildStream(IntSlice(a))
     //定义一个slice.填充元素
     a1:=[]interface{}{6,5,8,7}
     //使用实现了sort的type 包装,并调用调用BuildStream
-    s1,err:=BuildStream(IntSlice(a1))
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
+    s1:=BuildStream(IntSlice(a1))
    //指定流的类型
     var types []int
     //将两个流合并为1个，并且以s为主流
@@ -95,11 +87,7 @@ func main() {
     fmt.Println(s2.Collect())
     fmt.Println(s.Collect())
     a3 := []interface{}{Item(1), Item(2), Item(4), Item(4)}
-    s3, err := BuildStream(IntSlice(a3))
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
+    s3 := BuildStream(IntSlice(a3))
     s3.Distinct()
     fmt.Println(s3.Collect())
  }
