@@ -215,6 +215,7 @@ func (stream *Stream) GroupBy(FieldName string) map[string]*Stream {
 	return nil
 }
 
+
 /*
   组合流，将两个stream 简单组合在一起
 */

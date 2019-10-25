@@ -36,6 +36,9 @@ import (
 	"strconv"
 	. "github.com/felix0080/gostream"
 )
+type Student struct {
+	Name string
+}
 type IntSlice []interface{}
 
 func (s IntSlice) Len() int { return len(s) }
@@ -91,6 +94,17 @@ func main() {
     s3 := BuildStream(IntSlice(a3))
     s3.Distinct()
     fmt.Println(s3.Collect())
+    
+//流分流
+    var stus []Student
+	for i := 0; i < 5; i++ {
+		stus=append(stus,Student{strconv.Itoa(i)})
+	}
+	stus=append(stus, Student{strconv.Itoa(1)})
+	ss:=BuildStream(stus)
+	sss:=ss.GroupBy("Name")
+	fmt.Println(sss)
+
  }
    
 ```
